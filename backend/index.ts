@@ -5,7 +5,9 @@ import { PrismaClient } from "@prisma/client";
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+  origin: ["https://college-discovery-sigma.vercel.app", "http://localhost:3000"],
+}));
 app.use(express.json());
 
 // ✅ Test route
