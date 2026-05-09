@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model College {
+  id          Int       @id @default(autoincrement())
+  name        String
+  location    String
+  state       String
+  fees        Int
+  rating      Float
+  courses     String[]
+  placement   Int
+  established Int
+  imageUrl    String?
+  description String?
+  jeeRank     Int?      // JEE cutoff rank (null = not applicable)
+  eamcetRank  Int?      // EAMCET cutoff rank
+  bitsatScore Int?      // BITSAT cutoff score
+  wbjeeRank   Int?      // WBJEE cutoff rank
+  createdAt   DateTime  @default(now())
+
+  questions   Question[]
+}
+
+model Question {
+  id        Int      @id @default(autoincrement())
+  collegeId Int
+  college   College  @relation(fields: [collegeId], references: [id])
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+
+  answers   Answer[]
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+  author     String
+  content    String
+  createdAt  DateTime @default(now())
+}
