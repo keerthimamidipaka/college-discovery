@@ -4,7 +4,13 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL,
+    },
+  },
+});
 
 app.use(cors({
   origin: ["https://college-discovery-sigma.vercel.app", "http://localhost:3000"],
@@ -38,7 +44,8 @@ app.get("/colleges", async (req, res) => {
 
     res.json(colleges);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch colleges" });
+    console.error("DB Error:", error);
+    res.status(500).json({ error: "Failed to fetch colleges", details: String(error) });
   }
 });
 
